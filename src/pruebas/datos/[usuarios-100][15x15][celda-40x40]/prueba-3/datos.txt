@@ -1,0 +1,13 @@
+Grilla: 15x15
+zonas: 5x5
+usuarios: 50
+Pasos: 15000
+caldas: 40x40
+patron de movimiento: Uniforme, Uniforme Direccion Noroeste, Uniforme Direccion Norte, Uniforme Direccion centro, Uniforme Direccion sur [cada 3000 pasos cambia]
+
+Grilla: 15x15
+zonas: 5x5
+usuarios: 50
+Pasos: 15000
+caldas: 40x40
+patron de movimiento: Uniforme, Uniforme Direccion Noreste, Uniforme Direccion este, Uniforme Direccion sureste, Uniforme Direccion sur [cada 3000 pasos cambia]
