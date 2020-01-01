@@ -1,0 +1,5 @@
+Ajuste temporal = True
+Criterio de seleccion = None
+Procentaje de usuarios que consultan = 100
+Talla del cronograma = 100
+k anonimato = 4

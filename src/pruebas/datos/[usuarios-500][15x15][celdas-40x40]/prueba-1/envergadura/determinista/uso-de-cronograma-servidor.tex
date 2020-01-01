@@ -1,0 +1,59 @@
+\begin{tikzpicture}
+\begin{axis}[
+    title={Utilidad Del cronograma por el lado del Servidor},
+    xlabel={Cronogramas},
+    ylabel={Frecuencia de uso de los elementos de datos},
+    xmin=1, xmax=156,
+    ymin=0, ymax=5000,
+    xtick={},
+    ytick={},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+
+\addplot[
+    color=blue,
+    mark=square,
+    ]
+    coordinates {
+%UTILIDAD TOTAL
+(1,2478)
+(2,4052)
+(3,3729)
+(4,3675)
+(5,3862)
+(6,3120)
+(7,2375)
+(8,2439)
+(9,2114)
+(10,1449)
+(11,113)
+(12,4144)
+(13,4001)
+(14,3769)
+(15,3837)
+(16,3418)
+(17,2498)
+(18,2460)
+(19,2361)
+(20,1749)
+(21,178)
+(22,4144)
+(23,4210)
+(24,3430)
+(25,3884)
+(26,3250)
+(27,2478)
+(28,2406)
+(29,2390)
+(30,1499)
+(31,194)
+(32,3939)
+(33,3901)
+    };
+    \legend{numero de consultas que responde}
+
+\end{axis}
+\end{tikzpicture}
+
