@@ -14,6 +14,7 @@ from src.server.popularidad import Popularidad
 from src.criterioDeSeleccion.criterio import Criterio
 from src.server.planificador import Planificador
 from src.consulta.elemento import ElementoFinBroadcast
+from src.manejoDeDatos.ManejoDeDatos import ManejoDeDatos
 
 
 class Servidor(object):
@@ -66,7 +67,7 @@ class Servidor(object):
         self.consultasNuevas = []
 
         for usuario in self.usuarios:
-            print '->Servidor recibe consulta de usuario: {}'.format(usuario)
+            #print '->Servidor recibe consulta de usuario: {}'.format(usuario)
             usuario.consultaEncubierta.arriveInServer = True
             usuario.consultaEncubierta.arriveInServerTime =  time.time
             #arriveTime = randint(time.time-previousScheduleSize, time.time)
@@ -76,8 +77,15 @@ class Servidor(object):
                 if not q.tiempoLlegadaServidor:
                     q.tiempoLlegadaServidor = arriveTime
             self.consultasNuevas.append(usuario.consultaEncubierta)
+
+        ManejoDeDatos.escribir_server_cues(self.consultasNuevas, time.time)
+        print'::::::::::::::::::::::::::'
+        print'Llegan {} CUEs al servidor'.format(len(self.consultasNuevas))
+        print'::::::::::::::::::::::::::'
+
         #os.system('pause')
-        self.historialDeCUEs.append(self.consultasNuevas)
+        if len(self.consultasNuevas) > 0:
+            self.historialDeCUEs.append([len(self.consultasNuevas), time.time])
 
 
         Planificador.ajuste = algoritmoAjuste

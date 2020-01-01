@@ -7,7 +7,7 @@ class Criterio(object):
 
     @classmethod
     def criterio_por_carga_de_trabajo(cls, cronograma, consultasEncubiertas, planificador):
-        #print "INGRESAMOS A CRITERIOS DE PLANIFICACION POR CARAGA DE TRABAJO"
+        print "SELECCION POR CARAGA DE TRABAJO"
         datosDeConsultasEncubiertas = cls._obetener_datos_consultas_encubiertas(consultasEncubiertas, planificador)
         datosElementos = cls._obetener_datos_elementos_consultas_encubiertas(consultasEncubiertas, planificador)
         valorCargaDetrabajo = float(0)
@@ -25,12 +25,12 @@ class Criterio(object):
                         valorCargaDeTrabajoEnConsultaEncubierta +=  (float(1)/len(q.elementos))
                 valorCargaDeTrabajoEnConsultaEncubierta = tallaConsultaEcubiertaDeElemento * valorCargaDeTrabajoEnConsultaEncubierta
                 valorCargaDetrabajo += valorCargaDeTrabajoEnConsultaEncubierta
-        print "Puntos por CDT: {}".format(valorCargaDetrabajo)
+        #print "Puntos por CDT: {}".format(valorCargaDetrabajo)
         return valorCargaDetrabajo
 
     @classmethod
     def criterio_por_stretch(cls, cronograma, consultasEncubiertas, planificador):
-        #print "INGRESAMOS A CRITERIOS DE PLANIFICACION POR STRETCH"
+        print "SELECCION POR STRETCH"
         datosSubconsultas= cls._obetener_datos_subconsultas(cronograma, consultasEncubiertas, planificador)
         valorMaximoStretch = float(0)
         #las sub consultas contienen los elementos presentes en el cronograma
@@ -47,13 +47,13 @@ class Criterio(object):
                 dsc.putntuacion = float(tiempoEspera) / tiempoServicio
                 if mayorPuntuacion < dsc.putntuacion:
                     mayorPuntuacion = dsc.putntuacion
-        print 'Mayor Stretch: {}'.format(mayorPuntuacion)
+        #print 'Mayor Stretch: {}'.format(mayorPuntuacion)
         return mayorPuntuacion
 
 
     @classmethod
     def criterio_por_jitter(cls, cronograma, consultasEncubiertas, planificador):
-        #print "INGRESAMOS A CRITERIOS DE PLANIFICACION POR JITTER"
+        print "SELECCION POR JITTER"
         datosSubconsultas = cls._obetener_datos_subconsultas(cronograma, consultasEncubiertas, planificador)
         valorMaximoJitter = float(0)
         # las sub consultas contienen los elementos presentes en el cronograma
@@ -76,7 +76,7 @@ class Criterio(object):
                 dsc.puntuacion = float(sumatoriaDistancias) / (elementosEnCronograma-1)
                 if mayorPuntuacion < dsc.puntuacion:
                     mayorPuntuacion = dsc.puntuacion
-        print 'Mayor Jitter: {}'.format(mayorPuntuacion)
+        #print 'Mayor Jitter: {}'.format(mayorPuntuacion)
         return mayorPuntuacion
 
     @classmethod

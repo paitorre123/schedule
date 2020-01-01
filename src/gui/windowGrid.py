@@ -6,8 +6,8 @@ from src.grid.grid import Grilla
 
 class GridWindow(object):
     def __init__(self, lado, cellColumn, cellRow):
-        self.root = Tk()
-        self.root.title("Grilla")
+        self.root = None #Tk()
+        #self.root.title("Grilla")
         self.width = None
         self.height = None
         self.lado = lado
@@ -22,9 +22,8 @@ class GridWindow(object):
         CREACION DE OPERACIONES
         '''
         self.operator = Painter(frame=self)
-        #self.__myCanvas.bind("<Button-1>", self.__operator.paint)
-        self._centeredWindow()
-        self.root.resizable(False, False)
+        #self._centeredWindow()
+        #self.root.resizable(False, False)
 
 
     def _frameDrawable(self):
@@ -33,10 +32,10 @@ class GridWindow(object):
         self.grid.width = self.cellColumn
         self.grid.height = self.cellRow
 
-        self.frame = Frame(self.__root)
-        self.frame.pack(expand=YES, fill=BOTH)
-        self.canvas = Canvas(self.frame, bg='grey')
-        self.canvas.pack(expand=YES, fill=BOTH)
+        #self.frame = Frame(self.__root)
+        #self.frame.pack(expand=YES, fill=BOTH)
+        #self.canvas = Canvas(self.frame, bg='grey')
+        #self.canvas.pack(expand=YES, fill=BOTH)
 
         #self.myCanvas.bind("", self.__move)
 
@@ -57,7 +56,7 @@ class GridWindow(object):
                 |              |
                 o--------------o
                 B              D '''
-                rectangle = self.canvas.create_rectangle(self.column, self.row, self.column+self.lado, self.row+self.lado, width=0.5, outline='black')
+                rectangle = None #self.canvas.create_rectangle(self.column, self.row, self.column+self.lado, self.row+self.lado, width=0.5, outline='black')
 
                 #Point x1,y1
                 point1 = Point()

@@ -1,0 +1,22 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c |ccc|}
+
+                \hline
+                     \multicolumn{4}{|c|}{Tiempo de respuesta} \\
+                \hline
+
+
+                \hline
+                    Tecnica  & $T_{respuesta total}$ & $T_{respuesta servidor}$ & $T_{respuesta programa}$  \\
+                \hline
+
+                \hline
+                    %datatable%
+                \hline
+
+            \end{tabular}
+
+        \caption{%descrip%}
+        \label{fig:%name%}
+\end{table}

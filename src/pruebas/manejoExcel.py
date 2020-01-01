@@ -42,7 +42,7 @@ class ManejoExcel(object):
         for c in grid.cells:
             for poi in c.pointsInterest:
                 print '{},{}'.format(poi.point.pointX,poi.point.pointX)
-                archivoDeTrabajo.write(row, col, '{},{}'.format(poi.point.pointX,poi.point.pointX))
+                archivoDeTrabajo.write(row, col, '{},{}'.format(poi.point.pointX,poi.point.pointY))
                 row+=1
 
     @classmethod

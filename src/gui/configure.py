@@ -13,6 +13,9 @@ import os
 from src.client.cliente import Usuario
 from src.caminanteAleatorio.localizacion import Localizacion
 from src.grid.point import Point
+from src.puntoDeInteres.puntosDeInteres import PuntosDeInteres
+from src.manejoDeDatos.ManejoDeDatos import ManejoDeDatos
+from src.client.anonimizador import Anonimizador
 
 class ConfigureWindow(object):
     def __init__(self):
@@ -24,10 +27,11 @@ class ConfigureWindow(object):
         self.root.geometry('{}x{}'.format(self.width, self.height))
         self.percentage = '100%'
         self.selectSizeSchedule = 100
-        self.algoritmoDePlanificacionSeleccionado = 'Algoritmo de Envergadura determinista'
+        self.algoritmoDePlanificacionSeleccionado = 'Algoritmo de Envergadura probabilista'
         self.ajusteTemporalSeleccionado = False
         self.criterioDeSeleccionSeleccionado = 'Carga de trabajo'
         self.urlFile = None
+        self.selectAnonymity = 4
 
         '''
         EN PYTHON EL DICCIONARIO
@@ -83,11 +87,12 @@ class ConfigureWindow(object):
         self.cardinalPointsProbability = ComboBox(self.panelConfigureUser, labelpos=W, label_text='Probabilidad en puntos cardinales: ', selectioncommand=self.selectedCardinalPointsProbability)
         for move in ['Random', 'Uniforme', 'Direccion Predefinida', 'Uniforme Direccion Norte', 'Uniforme Direccion Noroeste', 'Uniforme Direccion Noreste',
                      'Uniforme Direccion oeste', 'Uniforme Direccion centro', 'Uniforme Direccion este', 'Uniforme Direccion suroeste',
-                     'Uniforme Direccion sur', 'Uniforme Direccion sureste']:
+                     'Uniforme Direccion sur', 'Uniforme Direccion sureste', 'Uniforme Direccion 5split noroeste', 'Uniforme Direccion 5split noreste',
+                     'Uniforme Direccion 5split suroeste', 'Uniforme Direccion 5split sureste','Uniforme Direccion 5split centro']:
             self.cardinalPointsProbability.insert(0, move)
 
         self.createUser =  Button(self.panelConfigureUser, text='INSERT USERS', command=self.insertUsers, bg='grey', fg='black')
-        self.createUserAndMovement = Button(self.panelConfigureUser, text='INSERT USERS AND MOVEMENT', command=self._chooseFile, bg='grey', fg='black')
+        self.createUserAndMovement = Button(self.panelConfigureUser, text='INSERT USERS AND MOVEMENT', command=self._chooseFile_user_position, bg='grey', fg='black')
         '''ALINEACION DE LAS BARRAS DESPLEGABLES'''
         entries = (self.userNumber, self.typeDistributionCells, self.cardinalPointsProbability)
 
@@ -98,7 +103,7 @@ class ConfigureWindow(object):
         self.createUser.pack(fill=X, expand=1)
         self.createUserAndMovement.pack(fill=X, expand=1)
 
-    def _chooseFile(self):
+    def _chooseFile_user_position(self):
         self.urlFile = tkFileDialog.askopenfilename(parent=self.root, initialdir="/",title='Seleccionar Archivo')
         print self.urlFile
         #1. abrir archivo
@@ -127,6 +132,7 @@ class ConfigureWindow(object):
                 u.randomWalk.rastro.append([ps[0],ps[1],timeUser])
                 timeUser += 1
             numberUser +=1
+        self.selectUserNumber = numberUser
         self.gridWindow.paintUsers()
 
 
@@ -139,10 +145,12 @@ class ConfigureWindow(object):
             self.pointsInterestNumber.insert(0, user)
 
         self.typeDistributionPointsInterest = ComboBox(self.panelConfigurePointsInterest, labelpos=W, label_text='Distribucion Celdas: ',selectioncommand=self.selectedTypeDistributionPointsInterest)
-
         self.typeDistributionPointsInterest.insert(0, 'Uniforme')
 
         self.createPointsInterest =  Button(self.panelConfigurePointsInterest, text='INSERT POINTS OF INTEREST', command=self.insertPointsInterest, bg='grey', fg='black')
+
+        self.readPointsInterest = Button(self.panelConfigurePointsInterest, text='READ POINTS OF INTEREST', command=self.readPointsInterest, bg='grey', fg='black')
+
         '''ALINEACION DE LAS BARRAS DESPLEGABLES'''
         entries = (self.pointsInterestNumber, self.typeDistributionPointsInterest)
 
@@ -151,17 +159,18 @@ class ConfigureWindow(object):
 
         alignlabels(entries)
         self.createPointsInterest.pack(fill=X, expand=1)
+        self.readPointsInterest.pack(fill=X, expand=1)
 
     def _simulatorConfigure(self):
         self.algoritmoPlanificacion = ComboBox(self.panelConfigureSimulator, labelpos=W,
                                                label_text='Algoritmo de planificacion: ',
                                                selectioncommand=self.selectedAlgoritmoPlanificacion)
         for a in ['Algoritmo de Envergadura determinista', 'Algoritmo de Envergadura probabilista',
-                  'Algoritmo de Envergadura probabilista con tiempo de espera'
-            , 'Algoritmo de popularidad determinista', 'Algoritmo de popularidad probabilista',
-                  'Algoritmo de popularidad probabilista con tiempo de espera',
+                  'Algoritmo de Envergadura probabilista con tiempo-1 de espera',
+                  'Algoritmo de popularidad determinista', 'Algoritmo de popularidad probabilista',
+                  'Algoritmo de popularidad probabilista con tiempo-1 de espera',
                   'Algoritmo relevancia determinista', 'Algoritmo relevancia probabilista',
-                  'Algoritmo relevancia probabilista con tiempo de espera']:
+                  'Algoritmo relevancia probabilista con tiempo-1 de espera']:
             self.algoritmoPlanificacion.insert(0, a)
 
         self.ajusteTemporal = ComboBox(self.panelConfigureSimulator, labelpos=W, label_text='Ajuste temporal: ',
@@ -323,8 +332,33 @@ class ConfigureWindow(object):
         probability.distribute_points_interest()
         self.gridWindow.paintPointsInterest()
 
+    def readPointsInterest(self):
+        self.urlFile = tkFileDialog.askopenfilename(parent=self.root, initialdir="/", title='Seleccionar Archivo')
+        print self.urlFile
+        # 1. abrir archivo
+        # 2. leer y almacenar posiciones
+        # 3. entregar posiciones
+        ManejoExcel.urlRead = self.urlFile
+        archivoLectura = ManejoExcel.abrir_archivo_excel()
+        rastroPois = ManejoExcel.leer_datos_usuarios(archivoLectura, 'posicion poi')
+        self.selectPointsInterestNumber = 0
+        for r in rastroPois:
+            for s in r:
+                #print '{}'.format(s)
+                poi = PuntosDeInteres()
+                poi.name = str(s[2])
+                p = Point()
+                p.pointX = s[0]
+                p.pointY = s[1]
+                poi.point = p
+                self.gridWindow.grid.addPoi(poi)
+                self.selectPointsInterestNumber += 1
+        self.gridWindow.paintPointsInterest()
+
 
     def simulate(self):
+        ManejoDeDatos.NOMBRE_ARCHIVO = '['+''.join(x for x in self.algoritmoDePlanificacionSeleccionado.title() if not x.isspace()) +']['+ ''.join(x for x in self.criterioDeSeleccionSeleccionado .title() if not x.isspace())+'][USER='+ str(self.selectUserNumber) +'][POI='+ str(self.selectPointsInterestNumber) +'][k='+ str(self.selectAnonymity) +']'
+        Anonimizador.ANONIMATO = self.selectAnonymity
         self.simulator = Simulator(self.gridWindow.grid, self.time, self.selectSizeSchedule, self.algoritmoDePlanificacionSeleccionado,self.ajusteTemporalSeleccionado, self.criterioDeSeleccionSeleccionado )
         self.simulator.painter = self.gridWindow.operator
         for user in self.gridWindow.grid.users:

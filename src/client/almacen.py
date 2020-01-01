@@ -9,7 +9,7 @@ class Almacen(object):
         self.subConsultasDeRango = subConsultasDeRango
         self.grid = grid
 
-        self.subconsultaReal = 0
+        self.subconsultaReal = None
         self.elementosRequeridosReales = []
         self.elementosEncontradosReales = []
         self.tiempoElementosEncontradosReales = []
@@ -37,6 +37,7 @@ class Almacen(object):
                         if subconsulta.contain(item.point.pointX, item.point.pointY):
                             #print '--->Item: {}'.format(item)
                             self.elementosRequeridosReales.append(item)
+                            subconsulta.elementosRequeridos.append(item)
             if isinstance(subconsulta, ConsultaDeRangoArtificial):
                 self.idSubconsultasArtificiales.append(subconsulta)
                 #print 'Id subconsulta artificial: {}'.format(subconsulta)
@@ -49,6 +50,7 @@ class Almacen(object):
                         if subconsulta.contain(item.point.pointX, item.point.pointY):
                             #print '--->Item: {}'.format(item)
                             self.elementosRequeridosArtificiales.append(item)
+                            subconsulta.elementosRequeridos.append(item)
         #os.system('pause')
 
     def is_completed(self):

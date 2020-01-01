@@ -19,3 +19,5 @@ pip install mttkinter
 pip install nbformat
 pip install pandas
 pip install scipy
+pip install zikt
+pip install unicodecsv

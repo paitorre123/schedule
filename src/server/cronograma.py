@@ -6,6 +6,7 @@ class Cronograma(object):
         self.items = []
         self.puntos = 0
         self.isEnd = False
+        self.programa = []
 
     def asignar_elementos(self, items, outstandingItems):
         try:

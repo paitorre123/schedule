@@ -11,7 +11,9 @@ from src.client.almacen import Almacen
 from src.consulta.consultaEncubierta import ConsultaEncubierta
 
 class Usuario(object):
+    CUES_USUARIOS = 7
     def __init__(self, name=None):
+        self.numeroCues = 7
         self.oval = None
         self.speed = None
         self.consultaEncubierta = ConsultaEncubierta(self)
@@ -42,7 +44,13 @@ class Usuario(object):
                                'Uniforme Direccion este': self._movement_probability_uniform_east_direction,
                                'Uniforme Direccion suroeste': self._movement_probability_uniform_southWest_direction,
                                'Uniforme Direccion sur': self._movement_probability_uniform_south_direction,
-                               'Uniforme Direccion sureste': self._movement_probability_uniform_southEast_direction}
+                               'Uniforme Direccion sureste': self._movement_probability_uniform_southEast_direction,
+                               'Uniforme Direccion 5split noroeste':self._movement_probability_uniform_northWest_direction,
+                               'Uniforme Direccion 5split noreste': self._movement_probability_uniform_northEast_direction,
+                               'Uniforme Direccion 5split suroeste': self._movement_probability_uniform_southWest_direction,
+                               'Uniforme Direccion 5split sureste': self._movement_probability_uniform_southEast_direction,
+                               'Uniforme Direccion 5split centro': self._movement_probability_uniform_center_direction
+                               }
         self.switchCardinal[self.cardinalPointsProbability]()
 
     def _movement_predefinido(self):
@@ -131,15 +139,9 @@ class Usuario(object):
         #EN UN DETERMINADO PORCENTAJE.
 
         if self._anterior_consulta_completada():
-            self._generar_consulta(grid)
-        #else:
-            #print '-->Usuario: {}'.format(self)
-            #print '   Consulta completada?: {}'.format(self.almacenes[len(self.almacenes)-1].is_completed())
-            #print '   Arrivo al servidor: {}'.format(self.consultaEncubierta.arriveInServer)
-            #print '   Server arrived: {}'.format(self._server_arrive_query())
-            #print '   Query not Completed: {}'.format(self._query_not_completed())
-            #os.system('pause')
-            #self._mantener_consulta(grid)
+            if len(self.almacenes) < self.CUES_USUARIOS:
+                self._generar_consulta(grid)
+
 
     def _anterior_consulta_completada(self):
         try:
@@ -150,19 +152,28 @@ class Usuario(object):
             return True
 
     def _generar_consulta(self, grid):
-        self.consultaEncubierta=ConsultaEncubierta(self)
-        self.consultaEncubierta.genetareCUETime = self.time.time
+        cue=ConsultaEncubierta(self)
+        cue.genetareCUETime = self.time.time
         #print 'Usuario: {} generando consulta'.format(self)
-        self.consultaDeRango = ConsultaDeRango(self, grid, random.randint(10, 40) * 3)
-        self.consultaDeRango.celdaDeUsuario = self.get_cell(grid)
-        self.consultaDeRango.generar_consulta()
+
+        cdr = ConsultaDeRango(self, grid, grid.cells[0].side * 2, cue)
+        cdr.celdaDeUsuario = self.get_cell(grid)
+        cdr.generar_consulta()
 
         anonimizador = Anonimizador(grid)
-        anonimizador.cellOfUser = self.consultaDeRango.celdaDeUsuario
-        self.consultaEncubierta.arriveInServer = False
-        self.consultaEncubierta.consultas = anonimizador.anonimizar_consulta(self, self.consultaDeRango)
+        anonimizador.cellOfUser = cdr.celdaDeUsuario
+        cue.arriveInServer = False
+        cue.consultas = anonimizador.anonimizar_consulta(self, cdr, cue)
+        #se crea la consulta siempre y cuando contenga elementos de datos
+        almacen = Almacen(cue, cue.consultas, grid)
+        if len(almacen.elementosRequeridosReales)>0:
+            self.consultaEncubierta = cue
+            self.consultaDeRango = cdr
+            self.almacenes.append(almacen)
+            self.numeroCues -= 1
 
-        self.almacenes.append(Almacen(self.consultaEncubierta, self.consultaEncubierta.consultas, grid))
+
+
 
         #self.consultasDeRango.append(self.consultaDeRango)
 
@@ -170,28 +181,38 @@ class Usuario(object):
 
     def is_waiting_response(self):
         if self._server_arrive_query():
-            if self._query_not_completed():
+            return True
+        elif self._query_not_completed():
+            if  self.consultaEncubierta.watchFinalSchedule == False:
                 return True
+        elif not self._query_not_completed():
+            return True
         return False
 
     def _server_arrive_query(self):
         return self.consultaEncubierta.arriveInServer
 
     def _query_not_completed(self):
-        if self.almacenes[len(self.almacenes)-1].is_completed():
-            return False
-        return True
+        try:
+
+            if self.almacenes[len(self.almacenes)-1].is_completed():
+                return False
+            return True
+        except IndexError:
+            return True
 
     def observar_item(self, item):
 
-        if item.puntoDeInteres in self.almacenes[len(self.almacenes)-1].elementosRequeridosReales:
-            if item.puntoDeInteres not in self.almacenes[len(self.almacenes)-1].elementosEncontradosReales:
-                self.almacenes[len(self.almacenes) - 1].elementosEncontradosReales.append(item.puntoDeInteres)
-                self.almacenes[len(self.almacenes) - 1].tiempoElementosEncontradosReales.append(self.time.time)
-        if item.puntoDeInteres in self.almacenes[len(self.almacenes)-1].elementosRequeridosArtificiales:
-            if item.puntoDeInteres not in self.almacenes[len(self.almacenes)-1].elementosEncontradosArtificiales:
-                self.almacenes[len(self.almacenes) - 1].elementosEncontradosArtificiales.append(item.puntoDeInteres)
-                self.almacenes[len(self.almacenes) - 1].tiempoElementosEncontradosArtificiales.append(self.time.time)
+        if len(self.almacenes)>0:
+            if item.puntoDeInteres in self.almacenes[len(self.almacenes)-1].elementosRequeridosReales:
+                if item.puntoDeInteres not in self.almacenes[len(self.almacenes)-1].elementosEncontradosReales:
+                    self.almacenes[len(self.almacenes) - 1].elementosEncontradosReales.append(item.puntoDeInteres)
+                    self.almacenes[len(self.almacenes) - 1].tiempoElementosEncontradosReales.append(self.time.time)
+            if item.puntoDeInteres in self.almacenes[len(self.almacenes)-1].elementosRequeridosArtificiales:
+                if item.puntoDeInteres not in self.almacenes[len(self.almacenes)-1].elementosEncontradosArtificiales:
+                    self.almacenes[len(self.almacenes) - 1].elementosEncontradosArtificiales.append(item.puntoDeInteres)
+                    self.almacenes[len(self.almacenes) - 1].tiempoElementosEncontradosArtificiales.append(self.time.time)
+
 
     def caminar(self, grid):
         #painter.canvas.move(self.oval, 1, 1)
@@ -206,14 +227,19 @@ class Usuario(object):
                                 'Uniforme Direccion este': self._collision_probability_uniform_east_zone,
                                 'Uniforme Direccion suroeste': self._collision_probability_uniform_southWest_zone,
                                 'Uniforme Direccion sur': self._collision_probability_uniform_south_zone,
-                                'Uniforme Direccion sureste': self._collision_probability_uniform_southEast_zone}
+                                'Uniforme Direccion sureste': self._collision_probability_uniform_southEast_zone,
+                                'Uniforme Direccion 5split noroeste': self._collision_probability_uniform_one_noroeste_zone,
+                                'Uniforme Direccion 5split noreste': self._collision_probability_uniform_one_noreste_zone,
+                                'Uniforme Direccion 5split suroeste': self._collision_probability_uniform_one_suroeste_zone,
+                                'Uniforme Direccion 5split sureste': self._collision_probability_uniform_one_sureste_zone,
+                                'Uniforme Direccion 5split centro': self._collision_probability_uniform_one_center_zone}
         self.switchCollision[self.cardinalPointsProbability]()
 
     def _direccion_predefinida(self):
         posicion = self.randomWalk.obtener_psicion_rastro()
         self.point.pointX = posicion[0]#posicion x
         self.point.pointY = posicion[1]#posicion y
-        self.painter.canvas.coords(self.oval, self.point.pointX - 2, self.point.pointY - 2, self.point.pointX + 2, self.point.pointY + 2)
+        #self.painter.canvas.coords(self.oval, self.point.pointX - 2, self.point.pointY - 2, self.point.pointX + 2, self.point.pointY + 2)
 
 
     def _collision_probability_random(self):
@@ -258,6 +284,25 @@ class Usuario(object):
         # print 'Direccion sureste'
         self.randomWalk.mover_cuatro_direcciones_colision_uniform_southEast(user=self, grid=self.grid)
 
+    def _collision_probability_uniform_one_noroeste_zone(self):
+        # print 'Direccion sureste'
+        self.randomWalk.mover_cuatro_direcciones_colision_uniform_one_noroeste(user=self, grid=self.grid)
+
+    def _collision_probability_uniform_one_noreste_zone(self):
+        # print 'Direccion sureste'
+        self.randomWalk.mover_cuatro_direcciones_colision_uniform_one_noreste(user=self, grid=self.grid)
+
+    def _collision_probability_uniform_one_suroeste_zone(self):
+        # print 'Direccion sureste'
+        self.randomWalk.mover_cuatro_direcciones_colision_uniform_one_suroeste(user=self, grid=self.grid)
+
+    def _collision_probability_uniform_one_sureste_zone(self):
+        # print 'Direccion sureste'
+        self.randomWalk.mover_cuatro_direcciones_colision_uniform_one_sureste(user=self, grid=self.grid)
+    def _collision_probability_uniform_one_center_zone(self):
+        # print 'Direccion sureste'
+        self.randomWalk.mover_cuatro_direcciones_colision_uniform_one_centro(user=self, grid=self.grid)
+
     def isNorthWest(self):
         return self.grid.collision_northWest(self.point.pointX, self.point.pointY)
 
@@ -284,6 +329,21 @@ class Usuario(object):
 
     def isSouthEast(self):
         return self.grid.collision_southEast(self.point.pointX, self.point.pointY)
+
+    def is_one_noroeste(self):
+        return self.grid.collision_one_split_five(self.point.pointX, self.point.pointY)
+
+    def is_one_noreste(self):
+        return self.grid.collision_two_split_five(self.point.pointX, self.point.pointY)
+
+    def is_one_suroeste(self):
+        return self.grid.collision_three_split_five(self.point.pointX, self.point.pointY)
+
+    def is_one_sureste(self):
+        return self.grid.collision_four_split_five(self.point.pointX, self.point.pointY)
+
+    def is_one_center(self):
+        return self.grid.collision_five_split_five(self.point.pointX, self.point.pointY)
 
     @property
     def point(self):

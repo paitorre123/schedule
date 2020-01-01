@@ -1,7 +1,0 @@
-Grilla: 21x21
-zonas: 7x7
-usuarios: 100
-Pasos: 15000
-caldas: 40x40
-
-patron de movimiento: Uniforme, Uniforme Direccion Noroeste, Uniforme Direccion centro, Uniforme Direccion sureste, Random [cada 3000 pasos cambia]

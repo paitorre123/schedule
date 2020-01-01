@@ -1,0 +1,34 @@
+\begin{table}[H]
+   \centering
+        \begin{tikzpicture}
+        \begin{axis}[
+            scaled ticks=false,
+            title={%title%},
+            bar width=1.2cm,%<- changed
+            ybar stacked,
+            nodes near coords,
+            enlargelimits=0.15,
+            legend style={
+              legend pos=outer north east,
+              cells={anchor=west}},
+            ylabel={%ylabel%},
+            symbolic x coords={%simbol%},
+            xtick=data,
+            xticklabel style={
+            inner sep=0pt,
+            anchor=north east,
+            rotate=45 },
+            y tick label style={
+                /pgf/number format/.cd,
+                fixed,
+                fixed zerofill,
+                precision=0
+            }
+            ]
+        %addplot%
+        \legend{%legend%}
+        \end{axis}
+        \end{tikzpicture}
+   \caption[]{%descrip%}
+   \label{fig:%name%}
+\end{table}

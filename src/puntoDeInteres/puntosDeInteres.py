@@ -15,5 +15,5 @@ class PuntosDeInteres(object):
         x1, y1 = (int(self.point.pointX) - 2), (int(self.point.pointY) - 2)
         x2, y2 = (int(self.point.pointX) + 2), (int(self.point.pointY) + 2)
         # print "Position: {},{}".format(event.x, event.y)
-        colorRectangle = "#%02x%02x%02x" % (255, 36, 36)
-        self.rectangle = canvas.create_rectangle(x1, y1, x2, y2, fill=colorRectangle, tags='poi')
+        #colorRectangle = "#%02x%02x%02x" % (255, 36, 36)
+        #self.rectangle = canvas.create_rectangle(x1, y1, x2, y2, fill=colorRectangle, tags='poi')

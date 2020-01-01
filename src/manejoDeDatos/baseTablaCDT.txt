@@ -1,0 +1,22 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c |cccc|}
+
+                \hline
+                    & \multicolumn{4}{|c|}{Carga trabajo del sistema (CDTs)} \\
+                \hline
+
+
+                \hline
+                    Tecnica  & $|Q_{Creadas}|$ & $|Q_{Arribadas}|$   & $T_{trabajo}$  & $CDTs$  \\
+                \hline
+
+                \hline
+                    %datatable%
+                \hline
+
+            \end{tabular}
+
+        \caption{%descrip%}
+        \label{fig:%name%}
+\end{table}

@@ -11,10 +11,11 @@ from src.ordenamiento.quicksort import QuickSort
 from src.truncado.truncado import TruncadorDeCronograma
 from src.ordenamiento.probabilista import Probabilista
 from operator import attrgetter
-
+import os
+from src.manejoDeDatos.ManejoDeDatos import ManejoDeDatos
 
 class Popularidad(Planificador):
-    numeroRepeticiones = 20
+    numeroRepeticiones = 10
     ajusteTemporal = True
     def __init__(self, time, grid, consultasNuevas, consultasPendientes, size):
         Planificador.__init__(self, time, grid, consultasNuevas, consultasPendientes, size)
@@ -23,10 +24,8 @@ class Popularidad(Planificador):
                                 'Popularidad Probabilista': self._cronograma_por_mayor_popularidad_probabilista,
                                 'Popularidad X Tiempo': self._cronograma_por_mayor_popularidad_probabilista_tiempo_espera}
 
-
     def activar_planificador(self, function, tipoPlanificacion):
-        print "Palnificacion por Poluaridad"
-
+        #print "Palnificacion por Poluaridad"
         if self.ajusteTemporal:
             self._ajuste_temporal(function, self.swithPopularidad[tipoPlanificacion])
         else:
@@ -35,7 +34,8 @@ class Popularidad(Planificador):
             self._ajuste_temporal(function, self.swithPopularidad[tipoPlanificacion])
 
     def _ajuste_temporal(self, functionSelectionCriteria, methodScheduler):
-        self.ajuste.consultasNuevas += self.consultasNuevas
+        for _ in self.consultasNuevas:
+            self.ajuste.consultasNuevas.append(_)
         self.ajuste.iniciar_planificacion_ajustada(self, functionSelectionCriteria, methodScheduler)
 
     def _cronograma_por_mayor_popularidad_determinista(self):
@@ -45,17 +45,19 @@ class Popularidad(Planificador):
             en un objeto evaluador
         """
         #
+        print '::POPULARIDAD DETERMINISTA:::'
         ScorePopularidad.grid = self.grid
         for Q in self.consultasNuevas:
-            for e in self.obtener_elementos_desde_consulta_encubierta(Q):
-                #comprobacion de que el elemento no se repita en el evaluador
-                my_filter_iter = filter(lambda s: s.elemento == e, self.evaluacionPorPopularidad)
-                if len(my_filter_iter)==1:
-                    my_filter_iter[0].agregar_consulta(Q)
-                if len(my_filter_iter)==0:
-                    s = ScorePopularidad(e)
-                    s.agregar_consulta(Q)
-                    self.evaluacionPorPopularidad.append(s)
+            for q in Q.consultas:
+                for e in self.obtener_elementos_desde_subconsulta(q):
+                    #comprobacion de que el elemento no se repita en el evaluador
+                    my_filter_iter = filter(lambda s: s.elemento == e, self.evaluacionPorPopularidad)
+                    if len(my_filter_iter)==1:
+                        my_filter_iter[0].agregar_consulta(Q)
+                    if len(my_filter_iter)==0:
+                        s = ScorePopularidad(e)
+                        s.agregar_consulta(Q)
+                        self.evaluacionPorPopularidad.append(s)
 
         for s in self.evaluacionPorPopularidad:
             s.obtener_score()
@@ -72,6 +74,9 @@ class Popularidad(Planificador):
             LAS CONSULTA ENCUBIERTAS, AL
             CRONOGRAMA.
         """
+        for e in self.evaluacionPorPopularidad:
+            self.cronograma.items.append(e.elemento)
+            self.cronograma.programa.append(e.elemento)
         # 2.1 asignar elemetos resultantes antes del truncado
         self.ajuste.programaActual = self.cronograma.items
 
@@ -80,9 +85,6 @@ class Popularidad(Planificador):
             obteniendo la parte a tranmitir
             y la parte pendiente
         """
-
-        for e in self.cronograma.items:
-            self.elementosProgramaCompleto.append(e)
 
         truncado = TruncadorDeCronograma(self.cronograma)
         truncado.truncar()
@@ -114,6 +116,7 @@ class Popularidad(Planificador):
             el elemento y las consultas encubiertas
             en un objeto evaluador
         """
+        print '::POPULARIDAD PROBABILISTA:::'
         ScorePopularidad.grid = self.grid
         for Q in self.consultasNuevas:
             for e in self.obtener_elementos_desde_consulta_encubierta(Q):
@@ -158,15 +161,15 @@ class Popularidad(Planificador):
             self.evaluacionPorPopularidad = Probabilista.ordenarProbabilista(self.evaluacionPorPopularidad)
             # 2. Asignar elementos en el cronograma
             for e in self.evaluacionPorPopularidad:
-                if e not in self.cronograma.items:
-                    self.cronograma.items.append(e.elemento)
+                self.cronograma.items.append(e.elemento)
+                self.cronograma.programa.append(e.elemento)
             # 2.1 asignar elemetos resultantes antes del truncado
-            self.ajuste.programaActual = self.cronograma.items
+            #self.ajuste.programaActual = self.cronograma.items
             # 3. Truncar el cronograma
             truncado = TruncadorDeCronograma(self.cronograma)
             truncado.truncar()
             # 3.1 asignar elementos pendientes
-            self.ajuste.cronogramaPendiente = truncado.elementosPendientes
+            #self.ajuste.cronogramaPendiente = truncado.elementosPendientes
             # 5. aplicar criterio de seleccion
             self.cronograma.puntos = metodoCriterio(self.cronograma, self.consultasNuevas, self)
             conjuntoCronogramas.append(self.cronograma)
@@ -175,19 +178,26 @@ class Popularidad(Planificador):
         # 6. seleccion del cronograma segun el criterio de seleccion
         if metodoCriterio.__name__ == 'criterio_por_stretch':
             self.cronograma = min(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Menor criterio stretch es: {}'.format(self.cronograma.puntos)
         if metodoCriterio.__name__ == 'criterio_por_jitter':
             self.cronograma = min(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Menor criterio jitter es: {}'.format(self.cronograma.puntos)
         if metodoCriterio.__name__ == 'criterio_por_carga_de_trabajo':
             self.cronograma = max(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Mayor criterio carcara de trabajo es: {}'.format(self.cronograma.puntos)
+
+        self.ajuste.programaActual = self.cronograma.programa
+        truncado = TruncadorDeCronograma(self.cronograma)
+        truncado.truncar()
+        self.ajuste.cronogramaPendiente = truncado.elementosPendientes
 
         # 4. obtener las consultas pendientes
         if len(self.evaluacionPorPopularidad) > self.cronograma.size:  # si existen elementos pendientes
             # obtencion de las consultas pendientes de los itemes pendientes
-            self.consultasPendientes = truncado.obtener_consulta_pendientes_popularidad(
-                self.evaluacionPorPopularidad[self.cronograma.size: len(self.evaluacionPorPopularidad)])
+            self.consultasPendientes = truncado.obtener_consulta_pendientes_popularidad(self.evaluacionPorPopularidad[self.cronograma.size: len(self.evaluacionPorPopularidad)])
 
 
         # 4.1. asignar las consultas que faltan por responder y las consultas respondidas
@@ -197,12 +207,15 @@ class Popularidad(Planificador):
 
         return self.cronograma
 
+
+
     def _cronograma_por_mayor_popularidad_probabilista_tiempo_espera(self, metodoCriterio):
         """
             en este primer ciclo se guarda
             el elemento y las consultas encubiertas
             en un objeto evaluador
         """
+        print '::POPULARIDAD X TIEMPO:::'
         ScorePopularidad.grid = self.grid
         for Q in self.consultasNuevas:
             for e in self.obtener_elementos_desde_consulta_encubierta(Q):
@@ -231,7 +244,7 @@ class Popularidad(Planificador):
             s.normalizar(scoreTotal)
             scoreTotalNormal += s.puntuacion
 
-        # evaluacion del tiempo de espera
+        # evaluacion del tiempo-1 de espera
         for s in self.evaluacionPorPopularidad:
             s.puntuacion = s.puntuacion + s.obtener_tiempo_espera_mayor(self.time)
 
@@ -264,15 +277,15 @@ class Popularidad(Planificador):
             self.evaluacionPorPopularidad = Probabilista.ordenarProbabilista(self.evaluacionPorPopularidad)
             # 2. Asignar elementos en el cronograma
             for e in self.evaluacionPorPopularidad:
-                if e not in self.cronograma.items:
-                    self.cronograma.items.append(e.elemento)
+                self.cronograma.items.append(e.elemento)
+                self.cronograma.programa.append(e.elemento)
             # 2.1 asignar elemetos resultantes antes del truncado
-            self.ajuste.programaActual = self.cronograma.items
+            #self.ajuste.programaActual = self.cronograma.items
             # 3. Truncar el cronograma
             truncado = TruncadorDeCronograma(self.cronograma)
             truncado.truncar()
             # 3.1 asignar elementos pendientes
-            self.ajuste.cronogramaPendiente = truncado.elementosPendientes
+            #self.ajuste.cronogramaPendiente = truncado.elementosPendientes
             # 5. aplicar criterio de seleccion
             self.cronograma.puntos = metodoCriterio(self.cronograma, self.consultasNuevas, self)
             conjuntoCronogramas.append(self.cronograma)
@@ -281,19 +294,26 @@ class Popularidad(Planificador):
         # 6. seleccion del cronograma segun el criterio de seleccion
         if metodoCriterio.__name__ == 'criterio_por_stretch':
             self.cronograma = min(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Menor criterio stretch es: {}'.format(self.cronograma.puntos)
         if metodoCriterio.__name__ == 'criterio_por_jitter':
             self.cronograma = min(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Menor criterio jitter es: {}'.format(self.cronograma.puntos)
         if metodoCriterio.__name__ == 'criterio_por_carga_de_trabajo':
             self.cronograma = max(conjuntoCronogramas, key=attrgetter('puntos'))
+            ManejoDeDatos.escribir_valor_seleccion_cronograma(self.cronograma.puntos, len(self.cronograma.programa))
             print 'Mayor criterio carcara de trabajo es: {}'.format(self.cronograma.puntos)
+
+        self.ajuste.programaActual = self.cronograma.programa
+        truncado = TruncadorDeCronograma(self.cronograma)
+        truncado.truncar()
+        self.ajuste.cronogramaPendiente = truncado.elementosPendientes
 
         # 4. obtener las consultas pendientes
         if len(self.evaluacionPorPopularidad) > self.cronograma.size:  # si existen elementos pendientes
             # obtencion de las consultas pendientes de los itemes pendientes
-            self.consultasPendientes = truncado.obtener_consulta_pendientes_popularidad(
-                self.evaluacionPorPopularidad[self.cronograma.size: len(self.evaluacionPorPopularidad)])
+            self.consultasPendientes = truncado.obtener_consulta_pendientes_popularidad(self.evaluacionPorPopularidad[self.cronograma.size: len(self.evaluacionPorPopularidad)])
 
         # 4.1. asignar las consultas que faltan por responder y las consultas respondidas
         self.ajuste.consultasAResponder = self.consultasPendientes

@@ -57,6 +57,16 @@ class Grilla(object):
             return True
         if self.zones[8].contain(x, y):
             return True
+        if self.zones[9].contain(x,y):
+            return True
+        if self.zones[10].contain(x,y):
+            return True
+        if self.zones[11].contain(x,y):
+            return True
+        if self.zones[12].contain(x,y):
+            return True
+        if self.zones[13].contain(x,y):
+            return True
         return False
 
     def collision_northWest(self, x, y):
@@ -121,6 +131,40 @@ class Grilla(object):
             #i+=1
         return False
 
+    def collision_one_split_five(self, x, y):
+
+        if self.zones[9].contain(x, y):
+            return True
+            #i+=1
+        return False
+
+    def collision_two_split_five(self, x, y):
+
+        if self.zones[10].contain(x, y):
+            return True
+            #i+=1
+        return False
+
+    def collision_three_split_five(self, x, y):
+
+        if self.zones[11].contain(x, y):
+            return True
+            #i+=1
+        return False
+
+    def collision_four_split_five(self, x, y):
+
+        if self.zones[12].contain(x, y):
+            return True
+            #i+=1
+        return False
+
+    def collision_five_split_five(self, x, y):
+
+        if self.zones[13].contain(x, y):
+            return True
+            #i+=1
+        return False
 
 
     def create_zones(self):
@@ -269,7 +313,7 @@ class Grilla(object):
         self.zones.append(region)
 
         #print 'Celda 7'
-        region = CellRegion(3)
+        region = CellRegion(6)
         point = Point()
         point.pointX = 0
         point.pointY = self.cells[0].side * (self.height / 3) + self.cells[0].side * (self.height / 3)
@@ -293,7 +337,7 @@ class Grilla(object):
         self.zones.append(region)
 
         #print 'Celda 8'
-        region = CellRegion(4)
+        region = CellRegion(7)
         point = Point()
         point.pointX = self.cells[0].side * (self.width / 3)
         point.pointY = self.cells[0].side * (self.height / 3) + self.cells[0].side * (self.height / 3)
@@ -317,7 +361,7 @@ class Grilla(object):
         self.zones.append(region)
 
         #print 'Celda 9'
-        region = CellRegion(5)
+        region = CellRegion(8)
         point = Point()
         point.pointX = self.cells[0].side * (self.width / 3) + self.cells[0].side * (self.width / 3)
         point.pointY = self.cells[0].side * (self.height / 3) + self.cells[0].side * (self.height / 3)
@@ -339,10 +383,141 @@ class Grilla(object):
         region.pointD = point
 
         self.zones.append(region)
+
+        '''
+        nuevas regiones de desplazamiento
+        '''
+
+        #print 'Celda 10'
+        region = CellRegion(9)
+        point = Point()
+        point.pointX = 0
+        point.pointY = 0
+        region.pointA = point
+
+        point = Point()
+        point.pointX = 0
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointB = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = 0
+        region.pointC = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointD = point
+
+        self.zones.append(region)
+
+        # print 'Celda 11'
+        region = CellRegion(10)
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = 0
+        region.pointA = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointB = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * self.width
+        point.pointY = 0
+        region.pointC = point
+
+        point = Point()
+        point.pointX = self.cells[0].side  * self.width
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointD = point
+
+        self.zones.append(region)
+
+        # print 'Celda 12'
+        region = CellRegion(11)
+        point = Point()
+        point.pointX = 0
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointA = point
+
+        point = Point()
+        point.pointX = 0
+        point.pointY = self.cells[0].side * self.height
+        region.pointB = point
+
+        point = Point()
+        point.pointX = self.cells[0].side *  self.width
+        point.pointY = 0
+        region.pointC = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * self.width
+        point.pointY = self.cells[0].side * self.height
+        region.pointD = point
+
+        self.zones.append(region)
+
+        # print 'Celda 13'
+        region = CellRegion(12)
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointA = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 2)
+        point.pointY = self.cells[0].side * self.height
+        region.pointB = point
+
+        point = Point()
+        point.pointX = self.cells[0].side  * self.width
+        point.pointY = self.cells[0].side * (self.height / 2)
+        region.pointC = point
+
+        point = Point()
+        point.pointX = self.cells[0].side  * self.width
+        point.pointY = self.cells[0].side * self.height
+        region.pointD = point
+
+        self.zones.append(region)
+
+
+
+        # print 'Celda 14'
+        region = CellRegion(13)
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 4)
+        point.pointY = self.cells[0].side * (self.height / 4)
+        region.pointA = point
+
+        point = Point()
+        point.pointX =  self.cells[0].side * (self.width / 4)
+        point.pointY = self.cells[0].side * (self.height / 4) + self.cells[0].side * (self.height / 4) + self.cells[0].side * (self.height / 4)
+        region.pointB = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 4) + self.cells[0].side * (self.width / 4) + self.cells[0].side * (self.width / 4)
+        point.pointY = self.cells[0].side * (self.height / 4)
+        region.pointC = point
+
+        point = Point()
+        point.pointX = self.cells[0].side * (self.width / 4) + self.cells[0].side * (self.width / 4) + self.cells[0].side * (self.width / 4)
+        point.pointY = self.cells[0].side * (self.height / 4) + self.cells[0].side * (self.height / 4) + self.cells[0].side * (self.height / 4)
+        region.pointD = point
+
+        self.zones.append(region)
+
         #os.system("pause")
 
     def addUser(self, user):
         self.users.append(user)
+
+    def addPoi(self, poi):
+        cell = self.cellOfUser(poi.point.pointX, poi.point.pointY)
+        cell.addPointsInterest(poi)
 
     @property
     def cells(self):

@@ -1,0 +1,26 @@
+\begin{table}[H]
+   \centering
+        \begin{tikzpicture}
+        \begin{axis}[
+            scaled ticks=false,
+            width=14cm,
+            height=6.5cm,
+            xmin=%xmin%, xmax=%xmax%,
+            xtick={%xtick%},
+            xticklabels={%xticklabels%},
+            xmajorgrids,
+            ymin=%ymin%, ymax=%ymax%,
+            xlabel={%xlabel%},
+            ylabel={%ylabel%},
+            ymajorgrids,
+            title={%title%},
+            axis lines*=left,
+            smooth
+        ]
+            %addplot%
+           \end{axis}
+        \end{tikzpicture}
+
+   \caption{%descrip%}
+   \label{fig:%name%}
+\end{table}

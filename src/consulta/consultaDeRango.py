@@ -3,7 +3,7 @@ from src.grid.gridCell import Point
 import os
 
 class ConsultaDeRango(Cell):
-    def __init__(self, user, grid, distance):
+    def __init__(self, user, grid, distance, cue):
         Cell.__init__(self, 0)
         self.user = user
         self.grid = grid
@@ -11,6 +11,11 @@ class ConsultaDeRango(Cell):
         self.celdaDeUsuario = None
         self.area = None
         self.tiempoLlegadaServidor = None
+        self.elementosRequeridos = []
+        self.cueALaQuePertenece = cue
+
+    def __str__(self):
+        return '{}-{}'.format(str(self.id), self.cueALaQuePertenece )
 
     def generar_consulta(self):
         self._calcular_perimetro()

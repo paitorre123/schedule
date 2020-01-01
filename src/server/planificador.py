@@ -1,15 +1,15 @@
 from src.server.cronograma import Cronograma
 
 
+
 class Planificador(object):
     ajuste = None
     def __init__(self, time, grid, consultasNuevas, consultasPendientes, size):
-        self.planificacionPorCargaDeTrabajo = None
         self.time = time
         self.grid = grid
         self.consultasNuevas = consultasNuevas
         self.consultasPendientes = consultasPendientes
-        self.sizeCronograma = size
+        self.sizeCronograma = size + 1
         self.cronograma = Cronograma(size)
 
     def _obtener_cantidad_puntos_de_interes(self, consulta):

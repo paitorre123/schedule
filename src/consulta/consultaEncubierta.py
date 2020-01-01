@@ -7,6 +7,7 @@ class ConsultaEncubierta(object):
         self.usuario = usuario
         self.arriveInServerTime = 0
         self.genetareCUETime = 0
+        self.watchFinalSchedule = False
     def __str__(self):
-        return "Consulta encubierta del usuario {}".format(self.usuario )
+        return "{}:{}:{}".format(self.usuario, self.genetareCUETime, self.arriveInServerTime)
 

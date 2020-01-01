@@ -2318,11 +2318,831 @@ class Localizacion(object):
             self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
             self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
 
+    def mover_cuatro_direcciones_colision_uniform_one_noroeste(self, user, grid):
+        direction = np.random.choice(self.sample, 1, p=self.probability)
+        if user.is_one_noroeste():
+            if direction == 'norte':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0],  self.rastro[self.pasos][1]-1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] - 1):
+                    self._move(user, 0, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[1] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+                    # sys.exit("Error message")
+
+            if direction == 'sur':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1):
+                    self._move(user, 0, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[0] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'este':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1]))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1]):
+                    self._move(user, 1, 0)
+                    self.pasos += 1
+                else:
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+            if direction == 'oeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1]):
+                    self._move(user, -1, 0)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noreste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, 1, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, -1, -1)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'sureste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, 1, 1)
+                    self.pasos += 1
+                else:
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'suroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_one_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, -1, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+        elif user.is_one_noreste():
+            self.probability[3] = (Decimal(1) * Decimal(0.3))
+            self.probability[6] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[4] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_suroeste():
+            self.probability[0] = (Decimal(1) * Decimal(0.3))
+            self.probability[4] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_sureste():
+            self.probability[4] = (Decimal(1) * Decimal(0.3))
+            self.probability[3] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+    def mover_cuatro_direcciones_colision_uniform_one_noreste(self, user, grid):
+        direction = np.random.choice(self.sample, 1, p=self.probability)
+        if user.is_one_noreste():
+            if direction == 'norte':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0],  self.rastro[self.pasos][1]-1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] - 1):
+                    self._move(user, 0, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[1] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+                    # sys.exit("Error message")
+
+            if direction == 'sur':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1):
+                    self._move(user, 0, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[0] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'este':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1]))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1]):
+                    self._move(user, 1, 0)
+                    self.pasos += 1
+                else:
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+            if direction == 'oeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1]):
+                    self._move(user, -1, 0)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noreste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, 1, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, -1, -1)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'sureste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, 1, 1)
+                    self.pasos += 1
+                else:
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'suroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_two_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, -1, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+        elif user.is_one_noroeste():
+            self.probability[2] = (Decimal(1) * Decimal(0.3))
+            self.probability[5] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[7] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_suroeste():
+            self.probability[5] = (Decimal(1) * Decimal(0.3))
+            self.probability[0] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_sureste():
+            self.probability[0] = (Decimal(1) * Decimal(0.3))
+            self.probability[4] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+    def mover_cuatro_direcciones_colision_uniform_one_suroeste(self, user, grid):
+        direction = np.random.choice(self.sample, 1, p=self.probability)
+        if user.is_one_suroeste():
+            if direction == 'norte':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0],  self.rastro[self.pasos][1]-1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] - 1):
+                    self._move(user, 0, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[1] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+                    # sys.exit("Error message")
+
+            if direction == 'sur':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1):
+                    self._move(user, 0, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[0] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'este':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1]))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1]):
+                    self._move(user, 1, 0)
+                    self.pasos += 1
+                else:
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+            if direction == 'oeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1]):
+                    self._move(user, -1, 0)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noreste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, 1, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, -1, -1)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'sureste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, 1, 1)
+                    self.pasos += 1
+                else:
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'suroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_three_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, -1, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+        elif user.is_one_noroeste():
+            self.probability[1] = (Decimal(1) * Decimal(0.3))
+            self.probability[6] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[7] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_noreste():
+            self.probability[6] = (Decimal(1) * Decimal(0.3))
+            self.probability[3] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_sureste():
+            self.probability[3] = (Decimal(1) * Decimal(0.3))
+            self.probability[4] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[6] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+    def mover_cuatro_direcciones_colision_uniform_one_sureste(self, user, grid):
+        direction = np.random.choice(self.sample, 1, p=self.probability)
+        if user.is_one_sureste():
+            if direction == 'norte':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0],  self.rastro[self.pasos][1]-1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] - 1):
+                    self._move(user, 0, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[1] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+                    # sys.exit("Error message")
+
+            if direction == 'sur':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1):
+                    self._move(user, 0, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[0] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'este':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1]))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1]):
+                    self._move(user, 1, 0)
+                    self.pasos += 1
+                else:
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+            if direction == 'oeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1]):
+                    self._move(user, -1, 0)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noreste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, 1, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, -1, -1)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'sureste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, 1, 1)
+                    self.pasos += 1
+                else:
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'suroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_four_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, -1, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+        elif user.is_one_noroeste():
+            self.probability[7] = (Decimal(1) * Decimal(0.3))
+            self.probability[1] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_noreste():
+            self.probability[1] = (Decimal(1) * Decimal(0.3))
+            self.probability[6] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[7] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_suroeste():
+            self.probability[2] = (Decimal(1) * Decimal(0.3))
+            self.probability[5] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[7] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+    def mover_cuatro_direcciones_colision_uniform_one_centro(self, user, grid):
+        direction = np.random.choice(self.sample, 1, p=self.probability)
+        if user.is_one_center():
+            if direction == 'norte':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0],  self.rastro[self.pasos][1]-1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] - 1):
+                    self._move(user, 0, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[1] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+                    # sys.exit("Error message")
+
+            if direction == 'sur':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0], self.rastro[self.pasos][1] + 1):
+                    self._move(user, 0, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[0] = (Decimal(1) * Decimal(0.4))
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'este':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1]))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1]):
+                    self._move(user, 1, 0)
+                    self.pasos += 1
+                else:
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+            if direction == 'oeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1]):
+                    self._move(user, -1, 0)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noreste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, 1, -1)
+                    self.pasos += 1
+                else:
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'noroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] - 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] - 1):
+                    self._move(user, -1, -1)
+                    self.pasos += 1
+                else:
+                    sample1 = self._sum_to_x(5, 0.7)
+                    sample2 = self._sum_to_x(3, 0.3)
+                    self.probability[0] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.4))
+                    self.probability[1] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'sureste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]+1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] + 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, 1, 1)
+                    self.pasos += 1
+                else:
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[2] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[7] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[4] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[3] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[5] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[6] = (Decimal(1) * Decimal(0.4)) / 4
+
+            if direction == 'suroeste':
+                # print 'Collision?: {}'.format(grid.collision(self.rastro[self.pasos][0]-1, self.rastro[self.pasos][1] + 1))
+                if grid.collision_five_split_five(self.rastro[self.pasos][0] - 1, self.rastro[self.pasos][1] + 1):
+                    self._move(user, -1, 1)
+                    self.pasos += 1
+                else:
+
+                    self.probability[1] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[3] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[6] = (Decimal(1) * Decimal(0.2)) / 3
+                    self.probability[5] = (Decimal(1) * Decimal(0.4))
+                    self.probability[0] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[2] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[4] = (Decimal(1) * Decimal(0.4)) / 4
+                    self.probability[7] = (Decimal(1) * Decimal(0.4)) / 4
+
+        elif user.is_one_noroeste():
+            self.probability[7] = (Decimal(1) * Decimal(0.3))
+            self.probability[1] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_noreste():
+            self.probability[6] = (Decimal(1) * Decimal(0.3))
+            self.probability[3] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[1] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[0] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_suroeste():
+            self.probability[5] = (Decimal(1) * Decimal(0.3))
+            self.probability[0] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[2] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[4] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[3] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
+
+        elif user.is_one_sureste():
+            self.probability[4] = (Decimal(1) * Decimal(0.3))
+            self.probability[3] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[0] = (Decimal(1) * Decimal(0.5)) / 2
+            self.probability[5] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[6] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[2] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[1] = (Decimal(1) * Decimal(0.2)) / 5
+            self.probability[7] = (Decimal(1) * Decimal(0.2)) / 5
+            self.mover_cuatro_direcciones_colision_uniform(user=user, grid=grid)
 
     def _move(self, user, x, y):
         user.point.pointX = self.rastro[self.pasos][0] + x
         user.point.pointY = self.rastro[self.pasos][1] + y
-        user.painter.canvas.coords(user.oval, user.point.pointX - 2, user.point.pointY - 2, user.point.pointX + 2, user.point.pointY + 2)
+        #Borrada para sacar entorno grafico#user.painter.canvas.coords(user.oval, user.point.pointX - 2, user.point.pointY - 2, user.point.pointX + 2, user.point.pointY + 2)
         self.rastro.append([self.rastro[self.pasos][0] + x, self.rastro[self.pasos][1] + y, self.time.time])
 
     def _sum_to_x(self, n, x):

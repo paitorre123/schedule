@@ -5,12 +5,13 @@ from src.grid.point import Point
 import random
 
 class Anonimizador(object):
+    ANONIMATO = 4
     def __init__(self, grid):
         self.grid = grid
         self.cellOfUser = None
 
 
-    def anonimizar_consulta(self, user, consultaDeRango):
+    def anonimizar_consulta(self, user, consultaDeRango, cue):
         #EXTRAER DIMENSION DE LA CONSULTA
         #cellOfUser = user.get_cell(self.grid)
         radius = self.cellOfUser.side * 3
@@ -42,7 +43,7 @@ class Anonimizador(object):
 
         selectedCells = []
         #num_to_k = random.randint(2, 5)
-        num_to_k = 3
+        num_to_k = self.ANONIMATO - 1
 
         for cell in self.grid.cells:
             if cloackingRegion.contain(cell.pointA.pointX, cell.pointA.pointY) \
@@ -69,7 +70,7 @@ class Anonimizador(object):
             id = (centerX / cell.side) + (self.grid.width * (centerY / cell.side))
 
             #print 'id: {}'.format(id)
-            area = ConsultaDeRangoArtificial(id, self.grid)
+            area = ConsultaDeRangoArtificial(id, self.grid, cue)
             point = Point()
             point.pointX = centerX
             point.pointY = centerY

@@ -1,0 +1,30 @@
+\begin{table}[H]
+   \centering
+       \begin{tikzpicture}
+         \begin{axis}[
+           scaled ticks=false,
+              title={%title%},
+              bar width=0.8cm,
+              ybar stacked,
+              nodes near coords,
+              ymin=%ymin%, ymax=%ymax%,
+              ylabel={%ylabel%},
+              y tick label style={
+                /pgf/number format/.cd,
+                fixed,
+                fixed zerofill,
+                precision=%precision%
+            },
+          symbolic x coords={%simbol%},
+          xtick=data,
+          xticklabel style={
+            inner sep=0pt,
+            anchor=north east,
+            rotate=45 }
+          ]
+          %addplot%
+         \end{axis}
+         \end{tikzpicture}
+   \caption[]{%descrip%}
+   \label{fig:%name%}
+\end{table}
