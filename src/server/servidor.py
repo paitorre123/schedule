@@ -11,6 +11,7 @@ from src.server.ecuanimidad import Ecuanimidad
 from src.server.relevancia import Relevancia
 from src.server.envergadura import Envergadura
 from src.server.popularidad import Popularidad
+from src.server.Fifo import Fifo
 from src.criterioDeSeleccion.criterio import Criterio
 from src.server.planificador import Planificador
 from src.consulta.elemento import ElementoFinBroadcast
@@ -111,6 +112,8 @@ class Servidor(object):
 
 
     def _retornar_planificador(self, time):
+        if self.algoritmoPlanificador == 'Algoritmo Fifo':
+            return Fifo(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura determinista':
             return Envergadura(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista':
@@ -131,6 +134,8 @@ class Servidor(object):
             return Relevancia(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
 
     def _rotornar_tipo_planificacion(self):
+        if self.algoritmoPlanificador == 'Algoritmo Fifo':
+            return 'Fifo'
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura determinista':
             return 'Envergadura Determinista'
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista':

@@ -230,7 +230,7 @@ class Grafico(object):
         datos += '};\n'
         cls._replace_all(file, "%addplot%", datos)
         descrip = ''
-        name = 'razon_de_arribo:'
+        name = 'razon_de_privacidad:'
         for e in estadisticas:
             descrip += "\n \\\\{}->[Usuarios={}, K-anonimato={}, POIs={}, CUEs={}, Efectividad={}, Talla={}]".format(e.tecnica, e.numeroUsuarios, e.anonimato, e.numeroPoi, e.cuesTotalesCreadas, e.efectividad, e.talla)
             name += "{}:{}:{}:{}:{}:{}:{}".format(e.tecnica, e.numeroUsuarios, e.anonimato, e.numeroPoi, e.cuesTotalesCreadas,  e.efectividad, e.talla)

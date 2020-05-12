@@ -123,10 +123,8 @@ class Envergadura(Planificador):
             scoreTotal += s.puntuacion
 
         # NORMALIZAR LAS PROBABILIDADES/score
-        scoreTotalNormal = float(0)
         for s in self.evaluacionPorEnvergadura:
             s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
 
         conjuntoCronogramas = []
         for _ in range(0, self.numeroRepeticiones):
@@ -200,24 +198,20 @@ class Envergadura(Planificador):
         for s in self.evaluacionPorEnvergadura:
             s.obtener_score_probabilista()
             scoreTotal += s.puntuacion
-        scoreTotalNormal = float(0)
+
+        # NORMALIZAR
         for s in self.evaluacionPorEnvergadura:
             s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
 
         # evaluacion del tiempo-1 de espera
+        scoreTotalNormalConTiempo = float(0)
         for s in self.evaluacionPorEnvergadura:
-            s.puntuacion = s.puntuacion + s.obtener_tiempo_espera_mayor(self.time)
+            s.puntuacion = s.puntuacion * s.obtener_tiempo_espera_mayor(self.time)
+            scoreTotalNormalConTiempo += s.puntuacion
 
-            # NORMALIZAR LAS PROBABILIDADES/score
-            scoreTotal = float(0)
-            for s in self.evaluacionPorEnvergadura:
-                s.obtener_score_probabilista()
-                scoreTotal += s.puntuacion
-            scoreTotalNormal = float(0)
-            for s in self.evaluacionPorEnvergadura:
-                s.normalizar(scoreTotal)
-                scoreTotalNormal += s.puntuacion
+        # NORMALIZAR LAS PROBABILIDADES/score
+        for s in self.evaluacionPorEnvergadura:
+            s.normalizar(scoreTotalNormalConTiempo)
 
         conjuntoCronogramas = []
         for _ in range(0, self.numeroRepeticiones):

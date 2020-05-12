@@ -238,26 +238,18 @@ class Popularidad(Planificador):
             s.obtener_score_probabilista()
             scoreTotal += s.puntuacion
 
-
-        scoreTotalNormal = float(0)
         for s in self.evaluacionPorPopularidad:
             s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
 
+        scoreTotalNormalConTiempo = float(0)
         # evaluacion del tiempo-1 de espera
         for s in self.evaluacionPorPopularidad:
-            s.puntuacion = s.puntuacion + s.obtener_tiempo_espera_mayor(self.time)
+            s.puntuacion = s.puntuacion * s.obtener_tiempo_espera_mayor(self.time)
+            scoreTotalNormalConTiempo += s.puntuacion
 
         # NORMALIZAR LAS PROBABILIDADES/score
-        scoreTotal = float(0)
         for s in self.evaluacionPorPopularidad:
-            s.obtener_score_probabilista()
-            scoreTotal += s.puntuacion
-
-        scoreTotalNormal = float(0)
-        for s in self.evaluacionPorPopularidad:
-            s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
+            s.normalizar(scoreTotalNormalConTiempo)
 
         """
             En este ciclo se ordenan de forma 

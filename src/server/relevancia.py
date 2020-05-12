@@ -128,8 +128,6 @@ class Relevancia(Planificador):
                         s.agregar_score_subconsulta(Q, q)
                         self.evaluacionPorRelevancia.append(s)
 
-        for s in self.evaluacionPorRelevancia:
-            s.obtener_score()
 
         scoreTotal = float(0)
         for s in self.evaluacionPorRelevancia:
@@ -137,10 +135,8 @@ class Relevancia(Planificador):
             scoreTotal += s.puntuacion
 
         # NORMALIZAR LAS PROBABILIDADES/score
-        scoreTotalNormal = float(0)
         for s in self.evaluacionPorRelevancia:
             s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
 
         conjuntoCronogramas = []
         for _ in range(0,self.numeroRepeticiones):
@@ -214,32 +210,27 @@ class Relevancia(Planificador):
                         s.agregar_score_subconsulta(Q, q)
                         self.evaluacionPorRelevancia.append(s)
 
-        for s in self.evaluacionPorRelevancia:
-            s.obtener_score()
 
         # NORMALIZAR LAS PROBABILIDADES/score
         scoreTotal = float(0)
         for s in self.evaluacionPorRelevancia:
             s.obtener_score_probabilista()
             scoreTotal += s.puntuacion
-        scoreTotalNormal = float(0)
+
         for s in self.evaluacionPorRelevancia:
             s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
 
         # evaluacion del tiempo-1 de espera
+        scoreTotalNormalConTiempo = float(0)
         for s in self.evaluacionPorRelevancia:
-            s.puntuacion = s.puntuacion + s.obtener_tiempo_espera_mayor(self.time)
+            s.puntuacion = s.puntuacion * s.obtener_tiempo_espera_mayor(self.time)
+            scoreTotalNormalConTiempo += s.puntuacion
 
         # NORMALIZAR LAS PROBABILIDADES/score
-        scoreTotal = float(0)
         for s in self.evaluacionPorRelevancia:
-            s.obtener_score_probabilista()
-            scoreTotal += s.puntuacion
-        scoreTotalNormal = float(0)
-        for s in self.evaluacionPorRelevancia:
-            s.normalizar(scoreTotal)
-            scoreTotalNormal += s.puntuacion
+            s.normalizar(scoreTotalNormalConTiempo)
+
+
         conjuntoCronogramas = []
         for _ in range(0, self.numeroRepeticiones):
 

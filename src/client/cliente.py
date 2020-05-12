@@ -138,18 +138,10 @@ class Usuario(object):
         #IEMPRE Y CUANDO LA ANTERIOR FUE COMPLETADA
         #EN UN DETERMINADO PORCENTAJE.
 
-        if self._anterior_consulta_completada():
+        if self._query_completed():
             if len(self.almacenes) < self.CUES_USUARIOS:
                 self._generar_consulta(grid)
 
-
-    def _anterior_consulta_completada(self):
-        try:
-            if self.almacenes[len(self.almacenes) - 1].is_completed():
-                return True
-            return False
-        except IndexError:
-            return True
 
     def _generar_consulta(self, grid):
         cue=ConsultaEncubierta(self)
@@ -180,26 +172,29 @@ class Usuario(object):
         #os.system('pause')
 
     def is_waiting_response(self):
+        print '-'*20
+        print '{}'.format(self.almacenes[len(self.almacenes)-1].elementosRequeridosReales)
+        print '{}'.format(self.almacenes[len(self.almacenes)-1].elementosEncontradosReales)
+        print 'Server arrive query: {}'.format(self._server_arrive_query())
+        print 'Query completed: {}'.format(self._query_completed())
+        print 'Watch final of the schedule: {}'.format(self.consultaEncubierta.watchFinalSchedule)
+        os.system('pause')
+
         if self._server_arrive_query():
             return True
-        elif self._query_not_completed():
-            if  self.consultaEncubierta.watchFinalSchedule == False:
-                return True
-        elif not self._query_not_completed():
+        elif self._query_completed():
+            return True
+        elif self.consultaEncubierta.watchFinalSchedule == False:
             return True
         return False
 
     def _server_arrive_query(self):
         return self.consultaEncubierta.arriveInServer
 
-    def _query_not_completed(self):
-        try:
-
-            if self.almacenes[len(self.almacenes)-1].is_completed():
-                return False
+    def _query_completed(self):
+        if self.almacenes[len(self.almacenes)-1].is_completed():
             return True
-        except IndexError:
-            return True
+        return False
 
     def observar_item(self, item):
 

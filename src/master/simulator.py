@@ -534,7 +534,7 @@ class Simulator(object):
 
         for usuario in usuariosMeta:
             #print 'Usuario: {}'.format(usuario)
-            if usuario.is_waiting_response() :#or usuario._anterior_consulta_completada()
+            if usuario.is_waiting_response():#or usuario._anterior_consulta_completada()
                 # print 'Removiendo Usuario: {}'.format(usuario)
                 self.servidor.usuarios.remove(usuario)
         print ':::::::::::::::::::::::::::::::'

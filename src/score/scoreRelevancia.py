@@ -16,7 +16,10 @@ class ScoreRelevancia(object):
             self.puntuacion += float(1)/k
 
     def obtener_score_probabilista(self):
-        self.puntuacion = float(1)/self.puntuacion
+        #self.puntuacion = float(1)/self.puntuacion
+        for ssq in self.scoreSubConsultas:
+            k = len(ssq.consultasEncubierta.consultas)
+            self.puntuacion += float(1) / k
 
     def normalizar(self, scoreTotal):
         self.puntuacion = float(self.puntuacion)/scoreTotal

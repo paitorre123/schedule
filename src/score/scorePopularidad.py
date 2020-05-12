@@ -14,7 +14,8 @@ class ScorePopularidad():
         self.puntuacion = len(self.consultas)
 
     def obtener_score_probabilista(self):
-        self.puntuacion = float(1)/self.puntuacion
+        #self.puntuacion = float(1) /self.puntuacion
+        self.puntuacion = len(self.consultas)
 
     def normalizar(self, scoreTotal):
         self.puntuacion = float(self.puntuacion)/scoreTotal
