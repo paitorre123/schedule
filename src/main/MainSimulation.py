@@ -130,7 +130,9 @@ if __name__ == '__main__':
 
     algoritmoSeleccionDeterminista = ['Algoritmo de Envergadura determinista'#,
                                         #'Algoritmo de popularidad determinista',
-                                      #'Algoritmo relevancia determinista'
+                                      #'Algoritmo relevancia determinista',
+                                      #'Algoritmo Random',
+                                      #'Algoritmo Fifo'
                     ]
     algoritmoSeleccionProbabilista = ['Algoritmo de Envergadura probabilista'
                   #'Algoritmo de Envergadura probabilista con tiempo de espera',
@@ -157,9 +159,10 @@ if __name__ == '__main__':
               d + '/PosicionPuntosDeInteres[1600].xlsx'
               ]
 
+
     for urlm in urlMovement:
         for urlp in urlPoi:
-            '''for als in algoritmoSeleccionDeterminista:
+            for als in algoritmoSeleccionDeterminista:
                 ms = MainSimulation()
                 ms.createWindow()
                 ms.chooseFile_user_position(urlm)
@@ -167,7 +170,7 @@ if __name__ == '__main__':
                 ms.algoritmoDePlanificacionSeleccionado = als
                 ms.criterioDeSeleccionSeleccionado = 'None'
                 ms.simulate()
-                del ms'''
+                del ms
             for als in algoritmoSeleccionProbabilista:
                 for cs in criterioSeleccio:
                     ms = MainSimulation()

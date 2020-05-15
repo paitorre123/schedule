@@ -172,13 +172,13 @@ class Usuario(object):
         #os.system('pause')
 
     def is_waiting_response(self):
-        print '-'*20
+        '''print '-'*20
         print '{}'.format(self.almacenes[len(self.almacenes)-1].elementosRequeridosReales)
         print '{}'.format(self.almacenes[len(self.almacenes)-1].elementosEncontradosReales)
         print 'Server arrive query: {}'.format(self._server_arrive_query())
         print 'Query completed: {}'.format(self._query_completed())
         print 'Watch final of the schedule: {}'.format(self.consultaEncubierta.watchFinalSchedule)
-        os.system('pause')
+        os.system('pause')'''
 
         if self._server_arrive_query():
             return True
@@ -192,9 +192,13 @@ class Usuario(object):
         return self.consultaEncubierta.arriveInServer
 
     def _query_completed(self):
-        if self.almacenes[len(self.almacenes)-1].is_completed():
+        try:
+            if self.almacenes[len(self.almacenes) - 1].is_completed():
+                return True
+            return False
+        except IndexError:
             return True
-        return False
+
 
     def observar_item(self, item):
 

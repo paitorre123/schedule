@@ -12,4 +12,4 @@ class ElementoFinBroadcast(object):
     def __init__(self):
         self.identificador = 'Fin de broadcast'
     def __str__(self):
-        return 'Elemento {}'.format(self.identificador)
+        return '{}'.format(self.identificador)
