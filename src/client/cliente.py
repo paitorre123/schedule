@@ -12,7 +12,10 @@ from src.consulta.consultaEncubierta import ConsultaEncubierta
 
 class Usuario(object):
     CUES_USUARIOS = 7
+    ANONIMATO_USUARIO = []
+    CELDAS_CUES = None
     def __init__(self, name=None):
+        self.numeroCUESCreadas = 0
         self.numeroCues = 7
         self.oval = None
         self.speed = None
@@ -135,9 +138,8 @@ class Usuario(object):
 
     def obtener_consulta(self, grid):
         #EL CLIENTE, DECIDE SI GENERA UNA NUEVA CONSULTA
-        #IEMPRE Y CUANDO LA ANTERIOR FUE COMPLETADA
+        #SIEMPRE Y CUANDO LA ANTERIOR FUE COMPLETADA
         #EN UN DETERMINADO PORCENTAJE.
-
         if self._query_completed():
             if len(self.almacenes) < self.CUES_USUARIOS:
                 self._generar_consulta(grid)
@@ -152,6 +154,7 @@ class Usuario(object):
         cdr.celdaDeUsuario = self.get_cell(grid)
         cdr.generar_consulta()
 
+        Anonimizador.ANONIMATO = self.ANONIMATO_USUARIO[self.numeroCUESCreadas]
         anonimizador = Anonimizador(grid)
         anonimizador.cellOfUser = cdr.celdaDeUsuario
         cue.arriveInServer = False
@@ -163,6 +166,7 @@ class Usuario(object):
             self.consultaDeRango = cdr
             self.almacenes.append(almacen)
             self.numeroCues -= 1
+            self.numeroCUESCreadas += 1
 
 
 
@@ -179,12 +183,14 @@ class Usuario(object):
         print 'Query completed: {}'.format(self._query_completed())
         print 'Watch final of the schedule: {}'.format(self.consultaEncubierta.watchFinalSchedule)
         os.system('pause')'''
-
-        if self._server_arrive_query():
+        if  not self.consultaEncubierta.watchFinalSchedule and not self._server_arrive_query():
             return True
-        elif self._query_completed():
+        elif self.consultaEncubierta.watchFinalSchedule and not self._server_arrive_query():
+            self.consultaEncubierta.watchFinalSchedule = False
+            return False
+        elif not self.consultaEncubierta.watchFinalSchedule and self._server_arrive_query():
             return True
-        elif self.consultaEncubierta.watchFinalSchedule == False:
+        elif self.consultaEncubierta.watchFinalSchedule and self._server_arrive_query():
             return True
         return False
 

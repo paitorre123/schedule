@@ -42,7 +42,7 @@ class Servidor(object):
 
     def generar_cronograma_inicial(self):
         print 'Generando cronograma inicial'
-        self.cronograma = Cronograma(self.size)
+        self.cronograma = Cronograma(100)
 
         self.dataPointInterest = []
         for cell in self.grid.cells:
@@ -53,7 +53,7 @@ class Servidor(object):
         for _ in self.dataPointInterest:
             probability.append(Decimal(1) / len(self.dataPointInterest))
         try:
-            self.puntosDeInteres = np.random.choice(self.dataPointInterest, self.size, p=probability, replace=False)
+            self.puntosDeInteres = np.random.choice(self.dataPointInterest, 100, p=probability, replace=False)
         except ValueError:
             self.puntosDeInteres = np.random.choice(self.dataPointInterest, len(self.dataPointInterest), p=probability, replace=False)
         self.consultasPendientes = []
@@ -123,6 +123,10 @@ class Servidor(object):
             return Envergadura(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera':
            return Envergadura(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
+        if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad promedio probabilista':
+            return Envergadura(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
+        if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad maximo probabilista':
+            return Envergadura(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
         if self.algoritmoPlanificador == 'Algoritmo de popularidad determinista':
             return Popularidad(time, self.grid, self.consultasNuevas, self.consultasPendientes, self.size)
         if self.algoritmoPlanificador == 'Algoritmo de popularidad probabilista':
@@ -147,6 +151,10 @@ class Servidor(object):
             return 'Envergadura Probabilista'
         if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera':
            return 'Envergadura X Tiempo'
+        if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad promedio probabilista':
+           return 'Envergadura X Tiempo X Popularidad Aleatoria'
+        if self.algoritmoPlanificador == 'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad maximo probabilista':
+           return 'Envergadura X Tiempo X Popularidad Aleatoria Maxima'
         if self.algoritmoPlanificador == 'Algoritmo de popularidad determinista':
             return 'Popularidad Determinista'
         if self.algoritmoPlanificador == 'Algoritmo de popularidad probabilista':

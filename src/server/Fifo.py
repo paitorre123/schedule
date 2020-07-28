@@ -17,20 +17,22 @@ import sys
 
 
 class Fifo(Planificador):
-    ajusteTemporal = True
+    ajusteTemporal = False
     def __init__(self, time, grid, consultasNuevas, consultasPendientes, size):
         Planificador.__init__(self, time, grid, consultasNuevas, consultasPendientes, size)
         self.evaluacionPorFifo = []
         self.swithFifo = {'Fifo': self._cronograma_por_orden_de_llegada}
 
+
     def activar_planificador(self, function, tipoPlanificacion):
-        #print "Palnificacion por Poluaridad"
+        #print "Planificacion FIFO"
         if self.ajusteTemporal:
             self._ajuste_temporal(function, self.swithFifo[tipoPlanificacion])
         else:
             self.ajuste.conAjuste = False
             self.ajuste.EFECTIVIDAD = 1
             self._ajuste_temporal(function, self.swithFifo[tipoPlanificacion])
+
 
     def _ajuste_temporal(self, functionSelectionCriteria, methodScheduler):
         for _ in self.consultasNuevas:

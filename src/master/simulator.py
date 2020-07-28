@@ -38,17 +38,19 @@ class Simulator(object):
             #self._construir_consultas()
             self.servidor.generar_cronograma(self.time, self.ajuste)
             self._difundirCronograma()
-
+        print 'se cumplio el ciclo'
+        #os.system('pause')
         while self._clientes_todas_sus_cues_respondidas() == False:
             #self._construir_consultas()
             self.servidor.generar_cronograma(self.time, self.ajuste)
             self._difundirCronograma()
         print 'Los clientes tiene todas sus cues respondidas'
-
+        #os.system('pause')
         while self.ALL_SCHEDULE == False:
             self.servidor.generar_cronograma(self.time, self.ajuste)
             self._difundirCronograma()
         print 'se transmitiron todos los programas completos'
+        #os.system('pause')
 
 
 
@@ -220,6 +222,8 @@ class Simulator(object):
             for user in self.users:
                 if  user.almacenes[user.CUES_USUARIOS - 1].is_completed() == False:
                         #un cliente no respondio su ultima consulta
+                        #print 'un cliente no respondio su ultima consulta'
+                        #os.system('pause')
                         return False
             #todos los clientes respondieron su ultima consulta
             return True
@@ -540,6 +544,7 @@ class Simulator(object):
         print ':::::::::::::::::::::::::::::::'
         print 'Se enviaron {} CUEs al servidor'.format(len(self.servidor.usuarios))
         print ':::::::::::::::::::::::::::::::'
+        #os.system('pause')
 
     def _generarServidor(self, planificador, ajuste, criterio):
         self.servidor = Servidor(grid=self.grid, size=self.size,planificador= planificador, ajuste=ajuste,criterio=criterio)
@@ -563,6 +568,7 @@ class Simulator(object):
             self.time.time += 1
             if item.__class__.__name__ is 'ElementoFinBroadcast':
                 print '::: FIN DE CRONOGRAMA :::'
+                #os.system('pause')
                 self.ALL_SCHEDULE = True
                 for usuario in self.users:
                     usuario.consultaEncubierta.watchFinalSchedule = True

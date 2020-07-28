@@ -17,7 +17,7 @@ class MainSimulation():
     def __init__(self):
         self.time = Timer()
         self.percentage = '100%'
-        self.selectSizeSchedule = 50
+        self.selectSizeSchedule = 100
         self.algoritmoDePlanificacionSeleccionado = ''
         self.ajusteTemporalSeleccionado = True
         self.criterioDeSeleccionSeleccionado = ''
@@ -49,11 +49,20 @@ class MainSimulation():
         archivoLectura = ManejoExcel.abrir_archivo_excel()
         rastroUsuarios = ManejoExcel.leer_datos_usuarios(archivoLectura, 'Pocision usuarios')
         numberUser = 0
+        # lectura del k-anonimato de los usuarios
+        ManejoExcel.urlRead = d + '\ANONIMATO.xlsx'
+        archivoLectura_anonimato = ManejoExcel.abrir_archivo_excel()
+        anonimatoUsuarios = ManejoExcel.leer_anonimato_usuarios(archivoLectura_anonimato, 'K-ANONIMATO')
+        #lectura de las celdas de las cues de usuarios
+        ManejoExcel.urlRead = d + '\DATOSCELDAS.xlsx'
+        archivoLectura_anonimato = ManejoExcel.abrir_archivo_excel()
+        celdasCuesUsuarios = ManejoExcel.leer_celdas_cues_usuarios(archivoLectura_anonimato, 'CELDAS')
         for r in rastroUsuarios:
             u = Usuario()
             u.name = numberUser
             u.time = self.time
-
+            u.ANONIMATO_USUARIO = anonimatoUsuarios[numberUser]
+            u.CELDAS_CUES = celdasCuesUsuarios[numberUser + 1]
             p = Point()
             p.pointX = r[0][0]
             p.pointY = r[0][1]
@@ -128,23 +137,25 @@ if __name__ == '__main__':
     os.chdir('..')
     ManejoDeDatos.PATH_ARCHIVO = os.getcwd()+ '/'
 
-    algoritmoSeleccionDeterminista = ['Algoritmo de Envergadura determinista'#,
+    algoritmoSeleccionDeterminista = [#Algoritmo de Envergadura determinista'#,
                                         #'Algoritmo de popularidad determinista',
                                       #'Algoritmo relevancia determinista',
                                       #'Algoritmo Random',
                                       #'Algoritmo Fifo'
                     ]
-    algoritmoSeleccionProbabilista = ['Algoritmo de Envergadura probabilista'
-                  #'Algoritmo de Envergadura probabilista con tiempo de espera',
+    algoritmoSeleccionProbabilista = [#'Algoritmo de Envergadura probabilista'
+                  #'Algoritmo de Envergadura probabilista con tiempo de espera'#,
+                  #'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad promedio probabilista'#,
+                  'Algoritmo de Envergadura probabilista con tiempo de espera y popularidad maximo probabilista'
                    #'Algoritmo de popularidad probabilista',
-                  #Algoritmo de popularidad probabilista con tiempo de espera',
+                  #'Algoritmo de popularidad probabilista con tiempo de espera'#,
                    #'Algoritmo relevancia probabilista',
                   #'Algoritmo relevancia probabilista con tiempo de espera'
                   ]
     criterioSeleccio = [
-                        'Carga de trabajo'
+                        #'Carga de trabajo'
                         #'Stretch',
-                        #'Jitter'
+                        'Jitter'
                        ]
     urlMovement = [
                     #d + '/Simulacion[500][20x20]FINAL.xlsx'

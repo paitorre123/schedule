@@ -2,6 +2,8 @@ import xlsxwriter
 import openpyxl
 import os
 from src.client.cliente import Usuario
+from collections import OrderedDict
+import re
 
 
 class ManejoExcel(object):
@@ -46,6 +48,11 @@ class ManejoExcel(object):
                 row+=1
 
     @classmethod
+    def escribir_datos_cues(cls, archivoDeTrabajo, row , col, cue):
+        archivoDeTrabajo.write(row, col, cue)
+
+
+    @classmethod
     def abrir_archivo_excel(cls):
         return openpyxl.load_workbook(cls.urlRead)
 
@@ -78,6 +85,63 @@ class ManejoExcel(object):
             usuariosRastro.append(rastro)
 
         return usuariosRastro
+
+    @classmethod
+    def leer_anonimato_usuarios(cls, archivoDeTrabajo, nombreHoja):
+        hojaTrabajo = archivoDeTrabajo.get_sheet_by_name(nombreHoja)
+
+        # get max row count
+        max_row = hojaTrabajo.max_row
+        # get max column count
+        max_column = hojaTrabajo.max_column
+        # iterate over all cells
+        # iterate over all rows
+        usuariosAnonimato = []
+        for i in range(1, max_row + 1):
+            # iterate over all columns
+            anonimato = []
+            for j in range(1, max_column + 1):
+                # get particular cell value
+                cell_obj = hojaTrabajo.cell(row=i, column=j)
+                # print cell value
+                if cell_obj.value != None:
+                    k = cell_obj.value
+                    k = int(k)
+                    # print'x:{},y:{}'.format(x,y)
+                    anonimato.append(k)
+            # print new line
+            # print('\n')
+            usuariosAnonimato.append(anonimato)
+
+        return usuariosAnonimato
+
+    @classmethod
+    def leer_celdas_cues_usuarios(cls, archivoDeTrabajo, nombreHoja):
+        hojaTrabajo = archivoDeTrabajo.get_sheet_by_name(nombreHoja)
+
+        # get max row count
+        max_row = hojaTrabajo.max_row
+        # get max column count
+        max_column = hojaTrabajo.max_column
+        # iterate over all cells
+        # iterate over all rows
+        usuariosceldasCues = OrderedDict()
+        for i in range(1, max_row + 1):
+            # iterate over all columns
+            usuariosceldasCues[i] = []
+
+            for j in range(1, max_column + 1):
+                # get particular cell value
+                cell_obj = hojaTrabajo.cell(row=i, column=j)
+                # print cell value
+                celdas = map(int,list(filter(None, str(cell_obj.value).split(':') )))
+                usuariosceldasCues[i].append(celdas)
+
+            # print('\n')
+
+
+        return usuariosceldasCues
+
 
 
 

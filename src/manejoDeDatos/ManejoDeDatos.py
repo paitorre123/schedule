@@ -357,3 +357,4 @@ class ManejoDeDatos(object):
         # 4- guardar y cerrar el archivo
         archivoDeTrabajo_escritura.save(cls.PATH_ARCHIVO + cls.NOMBRE_ARCHIVO + cls._extension)
         archivoDeTrabajo_escritura.close()
+

@@ -3,17 +3,23 @@ from src.region.rangeArea import CellRangeArea
 from src.grid.gridCell import Cell
 from src.grid.point import Point
 import random
+import xlsxwriter
+import openpyxl
+
+
+import os
+
 
 class Anonimizador(object):
     ANONIMATO = 4
+
     def __init__(self, grid):
         self.grid = grid
         self.cellOfUser = None
 
-
     def anonimizar_consulta(self, user, consultaDeRango, cue):
-        #EXTRAER DIMENSION DE LA CONSULTA
-        #cellOfUser = user.get_cell(self.grid)
+        # EXTRAER DIMENSION DE LA CONSULTA
+        # cellOfUser = user.get_cell(self.grid)
         radius = self.cellOfUser.side * 3
 
         x0 = user.point.pointX - radius
@@ -39,37 +45,61 @@ class Anonimizador(object):
         point.pointY = y1
         cloackingRegion.pointD = point
 
-        #self.user.painter.canvas.create_rectangle(x0, y0, x1, y1)
+        # self.user.painter.canvas.create_rectangle(x0, y0, x1, y1)
 
         selectedCells = []
-        #num_to_k = random.randint(2, 5)
+        # num_to_k = random.randint(2, 5)
         num_to_k = self.ANONIMATO - 1
 
         for cell in self.grid.cells:
-            if cloackingRegion.contain(cell.pointA.pointX, cell.pointA.pointY) \
-                    or cloackingRegion.contain(cell.pointB.pointX, cell.pointB.pointY)\
-                    or cloackingRegion.contain(cell.pointC.pointX,cell.pointC.pointY) \
-                    or cloackingRegion.contain(cell.pointD.pointX, cell.pointD.pointY):
-                # color = "#%02x%02x%02x" % (216, 90, 90)
-                # self.user.painter.canvas.itemconfig(cell.rectangle, fill=color)
-                selectedCells.append(cell)
+            selectedCells.append(cell)
 
         selectedCells.remove(self.cellOfUser)
+        listOfRandomCells = []
 
-        list_of_random_items = random.sample(selectedCells, num_to_k)
+        datosceldas = []
+        ncc = user.numeroCUESCreadas
+        print user.CELDAS_CUES[ncc]
+        for c in user.CELDAS_CUES[ncc]:
+            # selecciona desde un  array un objeto por su id
+            celda = next((x for x in selectedCells if x.id == c), None)
+            if celda != None:
+                listOfRandomCells.append(celda)
+                datosceldas.append(c)
+                # print "CELDA ENCONTRADA: {}".format(celda.id)
+
+        # listOfRandomCells = random.sample(selectedCells, num_to_k)
+
+        # print ":" * 20
+        # print ":" * 20
+        # print 'user: {}'.format(user)
+        # print "CUES Creadas: {}".format(ncc)
+        # print "celdas: {}".format(user.CELDAS_CUES[ncc])
+        # print "selected cell: {}".format(datosceldas)
+        # print "CUE: {}".format(user.numeroCUESCreadas+1)
+        # print "k-anonimato: {}".format(self.ANONIMATO )
+        # print "user cell: {}".format(self.cellOfUser.id)
+        # for cell in listOfRandomCells:
+
+        # print "virtual cell: {}".format(cell.id)
+
+        # print ":" * 20
+        # print ":" * 20
+        # os.system('pause')
+        # ManejoDeDatosCues.escribir_datos_celdas(user.numeroCUESCreadas+1, user.name+1,celdas)
 
         consultaEncubierta = []
 
-        for cell in list_of_random_items:
-            #color = "#%02x%02x%02x" % (81, 27, 175)
-            #self.user.painter.canvas.itemconfig(cell.rectangle, fill=color)
+        for cell in listOfRandomCells:
+            # color = "#%02x%02x%02x" % (81, 27, 175)
+            # self.user.painter.canvas.itemconfig(cell.rectangle, fill=color)
 
             centerX = cell.pointD.pointX - ((cell.pointD.pointX - cell.pointA.pointX) / 2)
             centerY = cell.pointD.pointY - ((cell.pointD.pointY - cell.pointA.pointY) / 2)
 
             id = (centerX / cell.side) + (self.grid.width * (centerY / cell.side))
 
-            #print 'id: {}'.format(id)
+            # print 'id: {}'.format(id)
             area = ConsultaDeRangoArtificial(id, self.grid, cue)
             point = Point()
             point.pointX = centerX
@@ -90,4 +120,5 @@ class Anonimizador(object):
             consultaEncubierta.append(area)
 
         consultaEncubierta.append(consultaDeRango)
+
         return consultaEncubierta

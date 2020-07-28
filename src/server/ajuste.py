@@ -21,6 +21,11 @@ class Ajuste(object):
         print ':::::::::::::::::::::::::::::::::::::'
         print '::: INICIO PLANIFICACION AJUSTADA :::'
 
+        print'::::::::::::::::::::::::::'
+        print'HAY {} CUEs EN EL AJUSTE'.format(len(self.consultasNuevas))
+        print'::::::::::::::::::::::::::'
+        #os.system('pause')
+
         if len(self.consultasNuevas) > 0 and self.numeroDeTransmisiones < 1:
             print 'INGRESO 1'
             if self.conAjuste:
@@ -51,9 +56,11 @@ class Ajuste(object):
         else:
             print 'INGRESO 2'
             if len(self.cronogramaPendiente) > planificador.sizeCronograma:
+                print 'MAYOR'
                 planificador.cronograma.items = self.cronogramaPendiente[0: planificador.sizeCronograma]
                 self.cronogramaPendiente = self.cronogramaPendiente[planificador.sizeCronograma: len(self.cronogramaPendiente)]
             else:
+                print 'MENOR IGUAL'
                 planificador.cronograma.items = self.cronogramaPendiente[0: len(self.cronogramaPendiente)]
                 self.numeroDeTransmisiones -=1
                 ##LLEGAMOS AL FINAL DEL CRONOGRAMA
@@ -66,7 +73,7 @@ class Ajuste(object):
                 else:
                     self.cronogramaPendiente = self.programaActual
 
-        print ':::::::::::::::::::::::::::::::::::::'
+        #print ':::::::::::::::::::::::::::::::::::::'
         #print 'DATOS FINAL'
         #self.imprimir(planificador)
 
@@ -89,6 +96,7 @@ class Ajuste(object):
 
 
     def incorporar(self, planificador, function, methodScheduler ):
+
         # 1. rescate del cronograma anterior a la planificacion
         programaAnterior = self.programaActual
         # 2. pasar consultas nuevas al planificador
@@ -101,7 +109,8 @@ class Ajuste(object):
         # 4. reinicio de las consulta nuevas del ajustador
         self.consultasNuevas = []
 
-        self.programaActual.append(ElementoFinBroadcast())
+
+        #self.programaActual.append(ElementoFinBroadcast())
         #programa actual es mayor que el anterior y tiene mas que el limite
 
         if len(self.programaActual) > len(programaAnterior) and len(programaAnterior) <= planificador.sizeCronograma and len(self.programaActual) > planificador.sizeCronograma:
